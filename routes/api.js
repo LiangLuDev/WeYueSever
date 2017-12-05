@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const bookController = require('../controller/api/BookController');
 
-
-router.get('/book', bookController.getClassify);
-router.get('/addbook', bookController.addBook);
+/*book模块*/
+router.get('/book/classify', bookController.getClassify);
+router.get('/book/classify/detail', bookController.getClassifyDetail);
 
 module.exports = router;

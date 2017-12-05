@@ -6,10 +6,7 @@ const classifyInfo = require('../../model/bookClassifyInfo');
 //过滤的字段
 const video_filter = {
     _id: 0,
-    update_time: 0,
-    create_date: 0,
     __v: 0,
-    update_tag: 0
 };
 
 class Bookcontroller {
@@ -17,8 +14,14 @@ class Bookcontroller {
     constructor() {
     }
 
+    /**
+     * 全部分类
+     * @param req
+     * @param res
+     * @param next
+     */
     getClassify(req, res, next) {
-        classifyInfo.find({},video_filter,(err,data)=>{
+        classifyInfo.findOne({},video_filter,(err,data)=>{
             let result='查询出错';
             if (err) {
                 console.log(err);
@@ -33,12 +36,29 @@ class Bookcontroller {
             res.json({
                 code: constant.RESULT_CODE.SUCCESS.code,
                 msg: constant.RESULT_CODE.SUCCESS.msg,
-                result:result
+                data:result
             });
         });
+    }
+
+    /**
+     * 分类详情
+     * @param req
+     * @param res
+     * @param next
+     */
+    getClassifyDetail(req,res,next){
+        // req.gender
 
     }
 
+
+    /**
+     * 测试
+     * @param req
+     * @param res
+     * @param next
+     */
     addBook(req, res, next) {
         let info = {
             classify_id: '1',//分类id
@@ -60,7 +80,7 @@ class Bookcontroller {
             res.json({
                 code: constant.RESULT_CODE.SUCCESS.code,
                 msg: constant.RESULT_CODE.SUCCESS.msg,
-                result: msg
+                data: msg
             });
 
         });

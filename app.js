@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 
 const index = require('./routes/index');
 const api = require('./routes/api');
+const crawlerSchedule = require('./schedule/crawlerSchedule');
 
 const app = express();
 
@@ -26,6 +27,9 @@ app.use('/', index);
 app.use('/api', api);
 
 console.log('服务已开启...');
+
+//数据爬虫
+crawlerSchedule.scheduleCrawler();
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
