@@ -3,34 +3,23 @@
  */
 const dbHelper = require('../dbhelper/db');
 
-let bookInfo = {
+let bookInfoSchema = new dbHelper.Schema({
     _id: String,
     title: String,
     author: String,
     shortIntro: String,
     cover: String,
-    site: String,
     majorCate: String,
     minorCate: String,
-    sizetype: Number,
-    superscript: String,
     contentType: String,
-    allowMonthly: Boolean,
-    banned: Number,
     latelyFollower: Number,
-    retentionRatio: Boolean,
+    retentionRatio: Number,
     lastChapter: String,
-    tags: Array
-};
-
-let classifyDetailSchema = new dbHelper.Schema({
-    total: Number,
-    books: bookInfo,
-    ok: Boolean
+    tags:Array
 }, {
     collection: 'book_classify_detail'
 });
 
 
-const model = dbHelper.db.model('book_classify_detail', classifyDetailSchema);
+const model = dbHelper.db.model('book_classify_detail', bookInfoSchema);
 module.exports = model;

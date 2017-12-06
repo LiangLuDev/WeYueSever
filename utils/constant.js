@@ -3,6 +3,7 @@ const RESULT_CODE = {
     CREATE_SUCCESS: {code: 10001, msg: '创建成功'},
     UPDATE_SUCCESS: {code: 10002, msg: '修改成功'},
     DELETE_SUCCESS: {code: 10004, msg: '删除成功'},
+    NO_DATA:        {code: 10005, msg: '查询不到数据'},
     ARG_ERROR:      {code: 40000, msg: '参数错误'},
     NO_LOGIN:       {code: 40001, msg: '未登录'},
     FORBIDDEN:      {code: 40003, msg: '禁止访问'},

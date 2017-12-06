@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const bookController = require('../controller/api/BookController');
+const bookController = require('../controller/api/BookClassifyController');
 
 /*book模块*/
 router.get('/book/classify', bookController.getClassify);
