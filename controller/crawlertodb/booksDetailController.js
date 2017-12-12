@@ -11,7 +11,7 @@ const video_filter = {
  * @param bookinfo
  */
 function saveOrUpdateBooksDetail(bookinfo) {
-    booksDetailInfo.findOne({id: bookinfo._id}, (err, res) => {
+    booksDetailInfo.findOne({_id: bookinfo._id}, (err, res) => {
         if (err) {
             console.log('查询booksDetailInfo出错');
             return;

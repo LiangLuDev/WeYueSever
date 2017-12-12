@@ -34,6 +34,7 @@ let bookDetailInfoSchema = new dbHelper.Schema({
     chaptersCount: Number,//最近章节目录
     lastChapter: String,//最近章节目录
     copyright: String,//出版社
+    buytype: Number,//是否完结 0完结 2未完结
 
 }, {
     collection: 'book_info_detail'
