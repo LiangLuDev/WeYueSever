@@ -16,6 +16,7 @@
     "morgan": "~1.8.1",
     "node-schedule": "^1.2.4",
     "serve-favicon": "~2.4.2",
-    "urlencode": "^1.1.0"
+    "urlencode": "^1.1.0",
+    "request": "latest"
   }
 }
