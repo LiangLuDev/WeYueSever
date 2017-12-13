@@ -48,7 +48,7 @@ function getAllBooks() {
             return;
         }
         let dataArray = new Array(data._doc.male, data._doc.female, data._doc.press)
-        let classifyArray = new Array('male', 'female', 'picture', 'press');//男生、女生、出版
+        let classifyArray = new Array('male', 'female','press');//男生、女生、出版
         dataArray.forEach((datainfo, index) => {//
             forBooks(datainfo, classifyArray[index]);
         })
