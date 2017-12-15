@@ -11,7 +11,7 @@ const video_filter = {
  * @param bookinfo
  */
 function saveOrUpdateBookChapters(bookinfo) {
-    bookChaptersInfo.findOne({_id: bookinfo._id}, (err, res) => {
+    bookChaptersInfo.findOne({book: bookinfo.book}, (err, res) => {
         if (err) {
             console.log('查询bookChaptersInfo出错');
             return;
@@ -27,13 +27,17 @@ function saveOrUpdateBookChapters(bookinfo) {
                 console.log('插入书籍目录信息成功');
             })
         } else {
-            bookChaptersInfo.findByIdAndUpdate(bookinfo._id, bookinfo, (err, res) => {
-                if (err) {
-                    console.log(err);
-                    return;
-                }
-                console.log('更新书籍目录成功');
-            })
+
+            if (bookinfo.chapters.length > 0) {
+                bookChaptersInfo.update({book: bookinfo.book}, {chapters:bookinfo.chapters}, (err, res) => {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                    console.log('更新书籍目录成功');
+                })
+            }
+
         }
     })
 }
@@ -46,10 +50,10 @@ function saveOrUpdateBookChapters(bookinfo) {
 function findBookChaptersById(id, callback) {
     bookChaptersInfo.findOne({"book": id}, video_filter, (err, res) => {
         if (err) {
-            callback(err,null)
+            callback(err, null)
             return;
         }
-        callback(null,res);
+        callback(null, res);
     })
 }
 

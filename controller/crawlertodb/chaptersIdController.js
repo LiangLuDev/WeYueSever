@@ -26,13 +26,22 @@ function saveOrUpdateChaptersId(bookinfo) {
                 console.log('插入目录id信息成功');
             })
         } else {
-            chaptersIdInfo.findByIdAndUpdate(bookinfo.bookId, bookinfo, (err, res) => {
+
+            chaptersIdInfo.update({bookId: bookinfo.bookId},{chapterId:bookinfo.chapterId},(err,res)=>{
                 if (err) {
                     console.log(err);
                     return;
                 }
                 console.log('更新目录id成功');
             })
+
+            // chaptersIdInfo.findByIdAndUpdate(bookinfo.bookId, bookinfo, (err, res) => {
+            //     if (err) {
+            //         console.log(err);
+            //         return;
+            //     }
+            //     console.log('更新目录id成功');
+            // })
         }
     })
 }
