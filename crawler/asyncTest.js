@@ -51,9 +51,7 @@ function net4(p, cb) {
 function net5(p, cb) {
     http('http://api.zhuishushenqi.com/cats/lv2/statistics', (err, res, data) => {
         if (!err) {
-            // if (i == 3) {
             cb(null, 'net5==' + p + data)
-            // }
             console.log('net5==' + p + data);
         } else {
             cb(err, null)
