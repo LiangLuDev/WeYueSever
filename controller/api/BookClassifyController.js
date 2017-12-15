@@ -4,7 +4,6 @@ const constant = require('../../utils/constant');
 const classifyInfo = require('../../model/bookClassifyInfo');
 const booksInfo = require('../../model/booksInfo');
 const booksDetailInfo = require('../../model/booksDetailInfo');
-const booksController = require('../crawlertodb/booksController');
 const bookChaptersController = require('../crawlertodb/bookChaptersController');
 //过滤的字段
 const _filter = {
@@ -24,23 +23,11 @@ class Bookcontroller {
      * @param next
      */
     getClassify(req, res, next) {
-        classifyInfo.findOne({}, _filter, (err, data) => {
-            let result = '查询出错';
-            if (err) {
-                console.log(err);
-            } else {
-                if (data.length === 0) {
-                    result = '查不到分类';
-                } else {
-                    result = data;
-                }
-            }
 
-            res.json({
-                code: constant.RESULT_CODE.SUCCESS.code,
-                msg: constant.RESULT_CODE.SUCCESS.msg,
-                data: result
-            });
+        res.json({
+            code: constant.RESULT_CODE.SUCCESS.code,
+            msg: constant.RESULT_CODE.SUCCESS.msg,
+            data: constant.BOOK_CLASSIFY
         });
     }
 
@@ -89,16 +76,11 @@ class Bookcontroller {
             case 'reputation':
                 sortType = {retentionRatio: -1};
                 break
-            case 'over':
-                sortType = {latelyFollower: -1};
-                break
         }
+
 
         let find = booksDetailInfo.find({}, {__v: 0});
         find.where('majorCate').equals(major)
-        // if (type=='over') {
-        //     find.lte('buytype',0)
-        // }
         find.skip(page == 1 ? 0 : page * 10)
         find.limit(10)
         find.sort(sortType)
@@ -206,41 +188,6 @@ class Bookcontroller {
                 data: data
             });
         })
-    }
-
-
-    /**
-     * 测试
-     * @param req
-     * @param res
-     * @param next
-     */
-    addBook(req, res, next) {
-        let info = {
-            classify_id: '1',//分类id
-            name: '玄幻',//分类名称
-            book_count: '10086',//分类书籍数
-        };
-
-        classifyInfo.create(info, (err, result) => {
-            let msg = '';
-            if (err) {
-                console.log(err);
-                msg = '插入失败';
-            } else {
-                msg = '插入成功';
-                console.log('插入成功');
-
-            }
-
-            res.json({
-                code: constant.RESULT_CODE.SUCCESS.code,
-                msg: constant.RESULT_CODE.SUCCESS.msg,
-                data: msg
-            });
-
-        });
-
     }
 
 }
