@@ -36,7 +36,7 @@ function getBookClassify() {
 // const classifyUrl="http://api.zhuishushenqi.com/book/by-categories
 // ?gender=male&type=hot&major=玄幻&minor=东方玄幻&start=0&limit=20";
 
-const classifyUrl = baseUrl + "/book/by-categories?minor=&start=0&limit=5";
+const classifyUrl = baseUrl + "/book/by-categories?minor=&start=0&limit=30";
 
 // getAllBooks();
 
