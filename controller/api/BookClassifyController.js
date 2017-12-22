@@ -38,33 +38,29 @@ class Bookcontroller {
      * @param next
      */
     getBookList(req, res, next) {
-        let getder = req.query.gender;
-        let type = req.query.type;
-        let major = req.query.major;
-        let page = parseInt(req.query.page);
+        let type = req.query.type == null ? 'hot' : req.query.type;
+        let major = req.query.major == null ? '玄幻' : req.query.major;
+        let page = req.query.page == null ? 1 : req.query.page;
 
-        let sortType = {latelyFollower: 1};
 
-        console.log('major' + major);
-        console.log('page' + page);
-        console.log('type' + type);
-
-        if (type == null || major == null) {
-            let result = '参数错误';
-            if (type == null) {
-                result = 'type参数不能为空';
-            }
-            if (major == null) {
-                result = 'major参数不能为空';
-            }
-
-            res.json({
-                code: constant.RESULT_CODE.ARG_ERROR.code,
-                msg: constant.RESULT_CODE.ARG_ERROR.msg,
-                data: result
-            });
-            return;
-        }
+        let sortType /*= {latelyFollower: -1}*/;
+        //
+        // if (type == null || major == null) {
+        //     let result = '参数错误';
+        //     if (type == null) {
+        //         result = 'type参数不能为空';
+        //     }
+        //     if (major == null) {
+        //         result = 'major参数不能为空';
+        //     }
+        //
+        //     res.json({
+        //         code: constant.RESULT_CODE.ARG_ERROR.code,
+        //         msg: constant.RESULT_CODE.ARG_ERROR.msg,
+        //         data: result
+        //     });
+        //     return;
+        // }
 
         switch (type) {
             case 'hot':
@@ -105,8 +101,9 @@ class Bookcontroller {
 
     }
 
+
     /**
-     * 获取书籍信息
+     * 根据id获取书籍信息
      * @param req
      * @param res
      * @param next
@@ -141,6 +138,49 @@ class Bookcontroller {
                 data: data
             });
         })
+    }
+
+
+    /**
+     * 根据tag获取书籍信息
+     * @param req
+     * @param res
+     * @param next
+     */
+    getBookListByTag(req, res, next) {
+        let bookTag = req.params.bookTag;
+        let page = req.query.page;
+        if (bookTag == null) {
+            res.json({
+                code: constant.RESULT_CODE.ARG_ERROR.code,
+                msg: constant.RESULT_CODE.ARG_ERROR.msg,
+                data: 'bookTag参数不能为空'
+            });
+            return;
+        }
+
+        //tags数组包含其中的元素的数据
+        booksDetailInfo.find({tags: {$in: [bookTag]}}, _filter)
+            .skip(page == 1 ? 0 : page * 10)
+            .sort({retentionRatio: -1})
+            .limit(10)
+            .exec((err, data) => {
+                if (err) {
+                    console.log(err);
+                    res.json({
+                        code: constant.RESULT_CODE.NO_DATA.code,
+                        msg: constant.RESULT_CODE.NO_DATA.msg,
+                        data: '查不到此书籍信息'
+                    });
+                    return;
+                }
+
+                res.json({
+                    code: constant.RESULT_CODE.SUCCESS.code,
+                    msg: constant.RESULT_CODE.SUCCESS.msg,
+                    data: data
+                });
+            })
     }
 
     /**
@@ -189,6 +229,50 @@ class Bookcontroller {
             });
         })
     }
+
+
+    /**
+     * 获取搜索书籍信息
+     * @param req
+     * @param res
+     * @param next
+     */
+    getBookSearch(req, res, next) {
+        let keyword = req.query.keyword;
+
+        if (keyword == null) {
+            res.json({
+                code: constant.RESULT_CODE.ARG_ERROR.code,
+                msg: constant.RESULT_CODE.ARG_ERROR.msg,
+                data: 'keyword参数不能为空'
+            });
+            return;
+        }
+
+        console.log('keyword===' + keyword);
+        booksDetailInfo.find({}, _filter)
+        //多条件，数组
+            .or([{title: {$regex: keyword}}, {author: {$regex: keyword}}])
+            .limit(10)
+            .exec((err, data) => {
+                if (err) {
+                    console.log(err);
+                    res.json({
+                        code: constant.RESULT_CODE.NO_DATA.code,
+                        msg: constant.RESULT_CODE.NO_DATA.msg,
+                        data: '查不到此书籍信息'
+                    });
+                    return;
+                }
+
+                res.json({
+                    code: constant.RESULT_CODE.SUCCESS.code,
+                    msg: constant.RESULT_CODE.SUCCESS.msg,
+                    data: data
+                });
+            })
+    }
+
 
 }
 
