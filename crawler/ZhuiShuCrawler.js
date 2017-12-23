@@ -18,6 +18,7 @@ const baseUrl = 'http://api.zhuishushenqi.com';
  * http://api.zhuishushenqi.com/cats/lv2/statistics
  */
 function getBookClassify() {
+
     http(baseUrl + '/cats/lv2/statistics', (err, res, body) => {
         if (err) {
             console.log(err);
