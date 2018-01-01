@@ -1,5 +1,5 @@
 const http = require('request');
-const urlencode = require('urlencode');
+const urlEncode = require('urlencode');
 const async = require("async");
 const classifyBookController = require('../controller/crawlertodb/classifyBookController');
 const booksController = require('../controller/crawlertodb/booksController');
@@ -76,7 +76,7 @@ function getAllBooks(callback) {
  */
 function forBooks(info, allBookcallback) {
     async.mapSeries(info.detailInfo, (obj, callback) => {//循环拿出分类数据（玄幻/武侠/仙侠等等）
-        let encodeName = urlencode(obj.name);
+        let encodeName = urlEncode(obj.name);
         let url = classifyUrl + '&gender=' + info.name + '&type=&major=' + encodeName;
         http(url, (err, res, body) => {
             if (err) {

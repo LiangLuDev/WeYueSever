@@ -18,7 +18,6 @@
     "node-schedule": "^1.2.4",
     "request": "latest",
     "serve-favicon": "~2.4.2",
-    "urlencode": "^1.1.0",
-    "request": "latest"
+    "urlencode": "^1.1.0"
   }
 }
