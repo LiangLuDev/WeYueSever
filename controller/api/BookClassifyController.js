@@ -23,7 +23,6 @@ class Bookcontroller {
      * @param next
      */
     getClassify(req, res, next) {
-
         res.json({
             code: constant.RESULT_CODE.SUCCESS.code,
             msg: constant.RESULT_CODE.SUCCESS.msg,
