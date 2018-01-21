@@ -92,6 +92,7 @@ class UserController {
         let password = req.query.password;
         userInfo
             .findOne({name: name}, _filter)
+            .populate('likebooks')
             .exec((err, data) => {
                 if (err) {
                     console.log(err);
@@ -102,7 +103,6 @@ class UserController {
                     res.json({
                         code: constant.RESULT_CODE.NO_DATA.code,
                         msg: '此用户没有注册',
-                        data: {}
                     });
                     return;
                 }
@@ -138,45 +138,37 @@ class UserController {
                     res.json({
                         code: constant.RESULT_CODE.ARG_ERROR.code,
                         msg: '密码错误',
-                        data: {}
                     });
                 }
             });
 
     }
 
+    /**
+     * 获取用户信息
+     * @param req
+     * @param res
+     * @param next
+     */
+    getUserInfo(req, res, next) {
+        let name = req.decoded.name;
+        userInfo.findOne({name: name}, _filter).populate('likebooks').exec((err, data) => {
+            if (err) {
+                console.log(err);
+                res.json({
+                    code: constant.RESULT_CODE.NO_DATA.code,
+                    msg: '获取用户信息失败',
+                })
+                return;
+            }
 
-    // userinfo(req, res, next) {
-    //     let name = req.query.name;
-    //     if (!name) {
-    //         res.json({
-    //             code: constant.RESULT_CODE.ARG_ERROR.code,
-    //             msg: constant.RESULT_CODE.ARG_ERROR.msg,
-    //             data: 'name不能为空'
-    //         })
-    //         return;
-    //     }
-    //     userInfo.findOne({name: name}, _filter, (err, data) => {
-    //         if (err) {
-    //             console.log(err);
-    //             res.json({
-    //                 code: constant.RESULT_CODE.NO_DATA.code,
-    //                 msg: '获取用户信息失败',
-    //                 data: {}
-    //             })
-    //             return;
-    //         }
-    //
-    //         res.json({
-    //             code: constant.RESULT_CODE.SUCCESS.code,
-    //             msg: constant.RESULT_CODE.SUCCESS.msg,
-    //             data: data
-    //         })
-    //         return;
-    //
-    //
-    //     })
-    // }
+            res.json({
+                code: constant.RESULT_CODE.SUCCESS.code,
+                msg: constant.RESULT_CODE.SUCCESS.msg,
+                data: data
+            })
+        })
+    }
 
 
     /**
@@ -186,12 +178,13 @@ class UserController {
      * @param next
      */
     userUploadAvatar(req, res, next) {
-        let name = req.query.name;
+        let name = req.decoded.name;
+        // let name = req.query.name;
         if (!name) {
+            console.log('上传头像name不能为空');
             res.json({
-                code: constant.RESULT_CODE.ARG_ERROR.code,
-                msg: constant.RESULT_CODE.ARG_ERROR.msg,
-                data: 'name不能为空'
+                code: constant.RESULT_CODE.UPLOAD_ERR.code,
+                msg: '上传头像失败',
             })
             return;
         }
@@ -206,8 +199,7 @@ class UserController {
             if (err) {
                 res.json({
                     code: constant.RESULT_CODE.UPLOAD_ERR.code,
-                    msg: constant.RESULT_CODE.UPLOAD_ERR.msg,
-                    data: '上传头像失败'
+                    msg: '上传头像失败',
                 });
                 return;
             }
@@ -231,8 +223,7 @@ class UserController {
             if (extName.length == 0) {
                 res.json({
                     code: constant.RESULT_CODE.UPLOAD_ERR.code,
-                    msg: constant.RESULT_CODE.UPLOAD_ERR.msg,
-                    data: '只支持png和jpg格式图片'
+                    msg: '只支持png和jpg格式图片',
                 });
             }
 
@@ -250,7 +241,6 @@ class UserController {
                     res.json({
                         code: constant.RESULT_CODE.UPLOAD_ERR.code,
                         msg: constant.RESULT_CODE.UPLOAD_ERR.msg,
-                        data: {}
                     })
                 } else {
                     console.log('更新头像成功');
@@ -274,13 +264,12 @@ class UserController {
      * @param next
      */
     updatePassword(req, res, next) {
-        let name = req.query.name;
+        let name = req.decoded.name;
         let password = req.query.password;
         if (!password || !name) {
             res.json({
                 code: constant.RESULT_CODE.ARG_ERROR.code,
-                msg: 'password或name参数不能为空',
-                data: 'password或name参数不能为空'
+                msg: 'password参数不能为空',
             })
             return;
         }
@@ -293,9 +282,8 @@ class UserController {
         userInfo.findOne({name: name}, (err, data) => {
             if (data.password == pass) {
                 res.json({
-                    code: constant.RESULT_CODE.SUCCESS.code,
-                    msg: constant.RESULT_CODE.SUCCESS.msg,
-                    data: '新密码与旧密码一致,无需修改'
+                    code: constant.RESULT_CODE.NOT_FOUND.code,
+                    msg: '新密码与旧密码一致,无需修改'
                 })
                 return;
             }
@@ -306,8 +294,7 @@ class UserController {
                     console.log(err);
                     res.json({
                         code: constant.RESULT_CODE.SUCCESS.code,
-                        msg: constant.RESULT_CODE.SUCCESS.msg,
-                        data: '修改密码失败'
+                        msg: '修改密码失败'
                     })
                 } else {
                     console.log('修改密码成功');
@@ -331,14 +318,13 @@ class UserController {
      * @param next
      */
     updateUserInfo(req, res, next) {
-        let name = req.query.name;
+        let name = req.decoded.name;
         let nickname = req.query.nickname;
         let brief = req.query.brief;
         if (!name || !nickname || !brief) {
             res.json({
                 code: constant.RESULT_CODE.ARG_ERROR.code,
                 msg: '请求参数不能为空',
-                data: {}
             })
             return;
         }
@@ -362,8 +348,130 @@ class UserController {
             }
         });
     }
+
+    /**
+     * 获取用户书架
+     * @param req
+     * @param res
+     * @param next
+     */
+    getBookShelf(req, res, next) {
+        let name = req.decoded.name;
+        userInfo.findOne({name: name}, _filter).populate('likebooks').exec((err, data) => {
+            if (err) {
+                console.log(err);
+                res.json({
+                    code: constant.RESULT_CODE.NO_DATA.code,
+                    msg: '获取书架信息失败',
+                })
+                return;
+            }
+
+            res.json({
+                code: constant.RESULT_CODE.SUCCESS.code,
+                msg: constant.RESULT_CODE.SUCCESS.msg,
+                data: data.likebooks
+            })
+        })
+    }
+
+
+    /**
+     * 添加书籍信息到书架
+     * @param req
+     * @param res
+     * @param next
+     */
+    addBookShelf(req, res, next) {
+        let name = req.decoded.name;
+        let bookid = req.query.bookid;
+
+        userInfo.findOne({name: name}).exec((err, user) => {
+            if (err) {
+                console.log(err);
+                res.json({
+                    code: constant.RESULT_CODE.NOT_FOUND.code,
+                    msg: '书架同步服务器失败',
+                })
+                return;
+            }
+
+            if (user.likebooks.indexOf(bookid) > 0) {
+                res.json({
+                    code: constant.RESULT_CODE.NOT_FOUND.code,
+                    msg: '此书籍已添加书架',
+                })
+                return;
+            }
+            //添加书籍Id到用户信息
+            user.likebooks.push(bookid)
+            userInfo.update({name: name}, {likebooks: user.likebooks}).exec((err, result) => {
+                if (err) {
+                    console.log('书架同步服务器失败');
+                    res.json({
+                        code: constant.RESULT_CODE.NOT_FOUND.code,
+                        msg: '书架同步服务器失败',
+                    })
+                    return;
+                }
+
+                res.json({
+                    code: constant.RESULT_CODE.SUCCESS.code,
+                    msg: constant.RESULT_CODE.SUCCESS.msg,
+                    data: '添加书架成功'
+                })
+            })
+        })
+    }
+
+    /**
+     *  删除书架书籍
+     * @param req
+     * @param res
+     * @param next
+     */
+    deleteBookShelf(req, res, next) {
+        let name = req.decoded.name;
+        let bookid = req.query.bookid;
+
+        userInfo.findOne({name: name}).exec((err, user) => {
+            if (err) {
+                console.log(err);
+                res.json({
+                    code: constant.RESULT_CODE.NOT_FOUND.code,
+                    msg: '移除书架成功失败',
+                })
+                return;
+            }
+
+            if (user.likebooks.indexOf(bookid) < 0) {
+                res.json({
+                    code: constant.RESULT_CODE.NOT_FOUND.code,
+                    msg: '此书籍已不在书架',
+                })
+                return;
+            }
+            user.likebooks.remove(bookid)
+            userInfo.update({name: name}, {likebooks: user.likebooks}).exec((err, result) => {
+                if (err) {
+                    console.log('移除书架成功失败');
+                    res.json({
+                        code: constant.RESULT_CODE.SUCCESS.code,
+                        msg: '移除书架成功失败',
+                    })
+                    return;
+                }
+                console.log('delete', result);
+
+                res.json({
+                    code: constant.RESULT_CODE.SUCCESS.code,
+                    msg: constant.RESULT_CODE.SUCCESS.msg,
+                    data: '移除书架成功'
+                })
+            })
+        })
+    }
 }
 
 
-module
-    .exports = new UserController();
+module.exports = new UserController();

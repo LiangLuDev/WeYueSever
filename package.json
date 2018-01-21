@@ -18,6 +18,7 @@
     "mongoose": "^4.12.3",
     "morgan": "^1.8.2",
     "node-schedule": "^1.2.4",
+    "nodemailer": "^4.4.1",
     "request": "latest",
     "serve-favicon": "~2.4.2",
     "urlencode": "^1.1.0"
