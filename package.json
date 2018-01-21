@@ -11,14 +11,16 @@
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.3",
     "express": "~4.15.2",
+    "formidable": "^1.1.1",
     "jade": "~1.11.0",
+    "jsonwebtoken": "^7.4.1",
     "mongodb": "^2.2.33",
     "mongoose": "^4.12.3",
-    "morgan": "~1.8.1",
+    "morgan": "^1.8.2",
     "node-schedule": "^1.2.4",
+    "nodemailer": "^4.4.1",
     "request": "latest",
     "serve-favicon": "~2.4.2",
-    "urlencode": "^1.1.0",
-    "request": "latest"
+    "urlencode": "^1.1.0"
   }
 }

@@ -8,6 +8,7 @@ const bodyParser = require('body-parser');
 const index = require('./routes/index');
 const api = require('./routes/api');
 const crawlerSchedule = require('./schedule/crawlerSchedule');
+const config = require('./config/config')
 
 const app = express();
 
@@ -16,12 +17,16 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+
+// 使用 morgan 将请求日志输出到控制台
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+// 设置superSecret 全局参数
+app.set('superSecret', config.jwtsecret);
 
 app.use('/', index);
 app.use('/api', api);

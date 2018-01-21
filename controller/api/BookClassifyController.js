@@ -5,6 +5,7 @@ const classifyInfo = require('../../model/bookClassifyInfo');
 const booksInfo = require('../../model/booksInfo');
 const booksDetailInfo = require('../../model/booksDetailInfo');
 const bookChaptersController = require('../crawlertodb/bookChaptersController');
+const userInfo = require('../../model/userInfo');
 //过滤的字段
 const _filter = {
     // _id: 0,
@@ -23,7 +24,6 @@ class Bookcontroller {
      * @param next
      */
     getClassify(req, res, next) {
-
         res.json({
             code: constant.RESULT_CODE.SUCCESS.code,
             msg: constant.RESULT_CODE.SUCCESS.msg,
@@ -43,24 +43,7 @@ class Bookcontroller {
         let page = req.query.page == null ? 1 : req.query.page;
 
 
-        let sortType /*= {latelyFollower: -1}*/;
-        //
-        // if (type == null || major == null) {
-        //     let result = '参数错误';
-        //     if (type == null) {
-        //         result = 'type参数不能为空';
-        //     }
-        //     if (major == null) {
-        //         result = 'major参数不能为空';
-        //     }
-        //
-        //     res.json({
-        //         code: constant.RESULT_CODE.ARG_ERROR.code,
-        //         msg: constant.RESULT_CODE.ARG_ERROR.msg,
-        //         data: result
-        //     });
-        //     return;
-        // }
+        let sortType;
 
         switch (type) {
             case 'hot':
@@ -74,19 +57,17 @@ class Bookcontroller {
                 break
         }
 
-
         let find = booksDetailInfo.find({}, {__v: 0});
         find.where('majorCate').equals(major)
         find.skip(page == 1 ? 0 : page * 10)
         find.limit(10)
         find.sort(sortType)
-        find.exec((err, data) => {
+        find.exec((err, books) => {
             if (err) {
                 console.log(err);
                 res.json({
                     code: constant.RESULT_CODE.NO_DATA.code,
-                    msg: constant.RESULT_CODE.NO_DATA.msg,
-                    data: '暂无书籍信息'
+                    msg: '暂无书籍信息',
                 });
                 return;
             }
@@ -94,8 +75,26 @@ class Bookcontroller {
             res.json({
                 code: constant.RESULT_CODE.SUCCESS.code,
                 msg: constant.RESULT_CODE.SUCCESS.msg,
-                data: data
+                data: books
             });
+            //获取用户信息
+            // userInfo.findOne({name: name}).exec((err, user) => {
+            //     if (books.length > 0) {
+            //         books.forEach((book, index) => {
+            //             if (user.likebooks.indexOf(book._id) >= 0) {//设置此用户收藏的话就设置为已收藏
+            //                 book.isCollect = true;
+            //             }
+            //         })
+            //     }
+            //
+            //     res.json({
+            //         code: constant.RESULT_CODE.SUCCESS.code,
+            //         msg: constant.RESULT_CODE.SUCCESS.msg,
+            //         data: books
+            //     });
+            //
+            // })
+
 
         })
 
@@ -110,33 +109,40 @@ class Bookcontroller {
      */
 
     getBookById(req, res, next) {
-        let id = req.params.id;
-        if (id == null) {
+        let name = req.decoded.name;
+        let bookid = req.params.bookId;
+        if (bookid == null) {
             res.json({
                 code: constant.RESULT_CODE.ARG_ERROR.code,
-                msg: constant.RESULT_CODE.ARG_ERROR.msg,
-                data: 'id参数不能为空'
+                msg: 'id参数不能为空'
             });
 
             return;
         }
 
-        booksDetailInfo.findOne({_id: id}, _filter, (err, data) => {
+        booksDetailInfo.findOne({_id: bookid}, _filter, (err, book) => {
             if (err) {
                 console.log(err);
                 res.json({
                     code: constant.RESULT_CODE.NO_DATA.code,
-                    msg: constant.RESULT_CODE.NO_DATA.msg,
-                    data: '查不到此书籍信息'
+                    msg: '查不到此书籍信息'
                 });
                 return;
             }
 
-            res.json({
-                code: constant.RESULT_CODE.SUCCESS.code,
-                msg: constant.RESULT_CODE.SUCCESS.msg,
-                data: data
-            });
+            //获取用户信息
+            userInfo.findOne({name: name}).exec((err, user) => {
+                if (user.likebooks.indexOf(book._id) >= 0) {//设置此用户收藏的话就设置为已收藏
+                    book.isCollect = true;
+                }
+
+                res.json({
+                    code: constant.RESULT_CODE.SUCCESS.code,
+                    msg: constant.RESULT_CODE.SUCCESS.msg,
+                    data: book
+                });
+
+            })
         })
     }
 
@@ -148,7 +154,7 @@ class Bookcontroller {
      * @param next
      */
     getBookListByTag(req, res, next) {
-        let bookTag = req.params.bookTag;
+        let bookTag = req.query.bookTag;
         let page = req.query.page;
         if (bookTag == null) {
             res.json({
@@ -196,8 +202,7 @@ class Bookcontroller {
         if (id == null) {
             res.json({
                 code: constant.RESULT_CODE.ARG_ERROR.code,
-                msg: constant.RESULT_CODE.ARG_ERROR.msg,
-                data: 'id参数不能为空'
+                msg: 'id参数不能为空'
             });
 
             return;
@@ -207,8 +212,7 @@ class Bookcontroller {
                 console.log(err);
                 res.json({
                     code: constant.RESULT_CODE.NO_DATA.code,
-                    msg: constant.RESULT_CODE.NO_DATA.msg,
-                    data: '查不到此书籍信息'
+                    msg: '查不到此书籍信息'
                 });
                 return;
             }
@@ -216,8 +220,7 @@ class Bookcontroller {
             if (data == null) {
                 res.json({
                     code: constant.RESULT_CODE.NO_DATA.code,
-                    msg: constant.RESULT_CODE.NO_DATA.msg,
-                    data: '查不到此书籍信息'
+                    msg: '查不到此书籍信息'
                 });
                 return;
             }
@@ -243,8 +246,7 @@ class Bookcontroller {
         if (keyword == null) {
             res.json({
                 code: constant.RESULT_CODE.ARG_ERROR.code,
-                msg: constant.RESULT_CODE.ARG_ERROR.msg,
-                data: 'keyword参数不能为空'
+                msg: 'keyword参数不能为空'
             });
             return;
         }
@@ -259,8 +261,7 @@ class Bookcontroller {
                     console.log(err);
                     res.json({
                         code: constant.RESULT_CODE.NO_DATA.code,
-                        msg: constant.RESULT_CODE.NO_DATA.msg,
-                        data: '查不到此书籍信息'
+                        msg: '查不到此书籍信息'
                     });
                     return;
                 }
