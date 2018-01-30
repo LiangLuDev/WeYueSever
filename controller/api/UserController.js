@@ -1,4 +1,5 @@
 const userInfo = require('../../model/userInfo');
+const feedBackInfo = require('../../model/feedBackInfo');
 const constant = require("../../utils/constant");
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken'); // 使用jwt签名
@@ -457,11 +458,11 @@ class UserController {
                     console.log('移除书架成功失败');
                     res.json({
                         code: constant.RESULT_CODE.SUCCESS.code,
-                        msg: '移除书架成功失败',
+                        msg: constant.RESULT_CODE.SUCCESS.msg,
+                        data: '移除书架成功失败',
                     })
                     return;
                 }
-                console.log('delete', result);
 
                 res.json({
                     code: constant.RESULT_CODE.SUCCESS.code,
@@ -471,6 +472,65 @@ class UserController {
             })
         })
     }
+
+    /**
+     * 用户反馈
+     * @param req
+     * @param res
+     * @param next
+     */
+    userFeedBack(req, res, next) {
+        let qq = req.query.qq;
+        let feedback = req.query.feedback;
+
+        if (qq == null || feedback == null) {
+            res.json({
+                code: constant.RESULT_CODE.ARG_ERROR.code,
+                msg: 'QQ号或者反馈内容不能为空',
+            })
+            return
+        }
+        let feedbackinfo = {
+            qq: qq,
+            feedback: feedback
+        }
+        feedBackInfo.create(feedbackinfo, (err, data) => {
+            if (err) {
+                console.log(err);
+                res.json({
+                    code: constant.RESULT_CODE.NOT_FOUND.code,
+                    msg: '提交反馈失败',
+                })
+                return
+            }
+            res.json({
+                code: constant.RESULT_CODE.SUCCESS.code,
+                msg: constant.RESULT_CODE.SUCCESS.msg,
+                data: '提交反馈成功'
+            })
+        })
+
+    }
+
+    /**
+     * 版本更新
+     * @param req
+     * @param res
+     * @param next
+     */
+    appUpdate(req, res, next) {
+        let updateInfo = {
+            versioncode: 1,//版本号
+            downloadurl: '/apk/WeYue.apk',//下载链接
+        }
+        res.json({
+            code: constant.RESULT_CODE.SUCCESS.code,
+            msg: constant.RESULT_CODE.SUCCESS.msg,
+            data: updateInfo
+        })
+    }
+
+
 }
 
 

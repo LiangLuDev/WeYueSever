@@ -5,9 +5,13 @@ const userController = require('../controller/api/UserController');
 const constant = require("../utils/constant");
 const jwt = require('jsonwebtoken'); // 使用jwt签名
 
+//分类列表
+router.get('/classify', bookController.getClassify);
 /*user模块*/
 router.post('/user/register', userController.userRegister);
 router.get('/user/login', userController.userLogin);
+//用户反馈
+router.post('/feedback', userController.userFeedBack);
 
 
 router.use(function (req, res, next) {
@@ -47,10 +51,10 @@ router.get('/user/userinfo', userController.getUserInfo);
 router.get('/user/bookshelf', userController.getBookShelf)
 router.post('/user/bookshelf', userController.addBookShelf)
 router.delete('/user/bookshelf', userController.deleteBookShelf)
-
+//应用更新
+router.get('/appupdate', userController.appUpdate);
 
 /*book模块*/
-router.get('/classify', bookController.getClassify);
 router.get('/books', bookController.getBookList);
 router.get('/books/tag', bookController.getBookListByTag);
 router.get('/books/:bookId/chapters', bookController.getBookChapters);
