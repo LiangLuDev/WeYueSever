@@ -4,6 +4,7 @@ const constant = require("../../utils/constant");
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken'); // 使用jwt签名
 const config = require('../../config/config')
+const mail = require('../../utils/sendemail');
 const express = require('express');
 const app = express.Router();
 const formidable = require('formidable');
@@ -503,6 +504,8 @@ class UserController {
                 })
                 return
             }
+
+            mail.sendMail(feedbackinfo)
             res.json({
                 code: constant.RESULT_CODE.SUCCESS.code,
                 msg: constant.RESULT_CODE.SUCCESS.msg,
