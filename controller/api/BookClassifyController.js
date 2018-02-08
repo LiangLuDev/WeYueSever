@@ -255,7 +255,7 @@ class Bookcontroller {
         booksDetailInfo.find({}, _filter)
         //多条件，数组
             .or([{title: {$regex: keyword}}, {author: {$regex: keyword}}])
-            .limit(10)
+            .limit(30)
             .exec((err, data) => {
                 if (err) {
                     console.log(err);
