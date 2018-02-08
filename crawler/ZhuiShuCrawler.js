@@ -37,7 +37,7 @@ function getBookClassify() {
 // const classifyUrl="http://api.zhuishushenqi.com/book/by-categories
 // ?gender=male&type=hot&major=玄幻&minor=东方玄幻&start=0&limit=20";
 
-const classifyUrl = baseUrl + "/book/by-categories?minor=&start=0&limit=30";
+const classifyUrl = baseUrl + "/book/by-categories?minor=&start=0&limit=100000";
 
 // getAllBooks();
 
@@ -52,9 +52,9 @@ function getAllBooks(callback) {
             return;
         }
         //男生、女生、出版
-        let details = new Array({name: 'male', detailInfo: constant.BOOK_CLASSIFY.male}
+        let details = [{name: 'male', detailInfo: constant.BOOK_CLASSIFY.male}
             , {name: 'female', detailInfo: constant.BOOK_CLASSIFY.female}
-            , {name: 'press', detailInfo: constant.BOOK_CLASSIFY.press})
+            , {name: 'press', detailInfo: constant.BOOK_CLASSIFY.press}];
 
         async.mapSeries(details, forBooks, (err, datas) => {
             if (err) {
