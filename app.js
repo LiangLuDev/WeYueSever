@@ -34,7 +34,7 @@ app.use('/api', api);
 console.log('服务已开启...');
 
 //数据爬虫
-crawlerSchedule.scheduleCrawler();
+// crawlerSchedule.scheduleCrawler();
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
