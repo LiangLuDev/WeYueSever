@@ -4,7 +4,6 @@ const constant = require("../../utils/constant");
 
 function apptype(req, res, next) {
     let type = req.headers['app-type'];
-    console.log('token=', type);
     if (type) {
         next();
     } else {
@@ -20,8 +19,6 @@ function apptype(req, res, next) {
 function token(req, res, next) {
     // 拿取token 数据 按照自己传递方式写
     let token = req.headers['access-token'];
-    let type = req.headers['app-type'];
-    console.log('token=', token + type);
     if (token) {
         jwt.verify(token, 'wyjwtsecret', (err, decoded) => {
             if (err) {
