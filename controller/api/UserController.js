@@ -45,7 +45,7 @@ class UserController {
                     });
                     return;
                 }
-                //对密码进行加密存入数据库(注册时 前端传过来的密码是已经md5加密过，然后在这里加上WeYue字符串再次加密存入数据库)
+                //对密码进行加密存入数据库(在这里加上WeYue字符串加密存入数据库)
                 let pass = crypto.createHash('md5').update(password + 'WeYue').digest('hex');
                 let token = jwt.sign({name: name}, 'wyjwtsecret', {
                     expiresIn: "30d"  // 一个月过期
