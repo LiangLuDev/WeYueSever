@@ -14,7 +14,7 @@ const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -34,7 +34,7 @@ app.use('/api', api);
 console.log('服务已开启...');
 
 //数据爬虫
-crawlerSchedule.scheduleCrawler();
+// crawlerSchedule.scheduleCrawler();
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
