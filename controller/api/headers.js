@@ -19,6 +19,7 @@ function apptype(req, res, next) {
 function token(req, res, next) {
     // 拿取token 数据 按照自己传递方式写
     let token = req.headers['access-token'];
+    console.log("token",token);
     if (token) {
         jwt.verify(token, 'wyjwtsecret', (err, decoded) => {
             if (err) {
