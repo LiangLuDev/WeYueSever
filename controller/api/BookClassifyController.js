@@ -132,8 +132,10 @@ class Bookcontroller {
 
             //获取用户信息
             userInfo.findOne({name: name}).exec((err, user) => {
-                if (user.likebooks.indexOf(book._id) >= 0) {//设置此用户收藏的话就设置为已收藏
-                    book.isCollect = true;
+                if (!user.likebooks) {
+                    if (user.likebooks.indexOf(book._id) >= 0) {//设置此用户收藏的话就设置为已收藏
+                        book.isCollect = true;
+                    }
                 }
 
                 res.json({
