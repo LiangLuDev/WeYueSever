@@ -268,7 +268,7 @@ class UserController {
      */
     updatePassword(req, res, next) {
         let name = req.decoded.name;
-        let password = req.query.password;
+        let password = req.body.password;
         if (!password || !name) {
             res.json({
                 code: constant.RESULT_CODE.ARG_ERROR.code,
@@ -322,8 +322,8 @@ class UserController {
      */
     updateUserInfo(req, res, next) {
         let name = req.decoded.name;
-        let nickname = req.query.nickname;
-        let brief = req.query.brief;
+        let nickname = req.body.nickname;
+        let brief = req.body.brief;
         if (!name || !nickname || !brief) {
             res.json({
                 code: constant.RESULT_CODE.ARG_ERROR.code,
@@ -388,9 +388,7 @@ class UserController {
     addBookShelf(req, res, next) {
         let name = req.decoded.name;
         let bookid = req.body.bookid;
-        console.log(bookid);
         userInfo.findOne({name: name}).exec((err, user) => {
-            console.log(user);
             if (err) {
                 console.log(err);
                 res.json({
@@ -436,8 +434,7 @@ class UserController {
      */
     deleteBookShelf(req, res, next) {
         let name = req.decoded.name;
-        let bookid = req.query.bookid;
-
+        let bookid = req.body.bookid;
         userInfo.findOne({name: name}).exec((err, user) => {
             if (err) {
                 console.log(err);
