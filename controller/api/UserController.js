@@ -524,7 +524,7 @@ class UserController {
      */
     appUpdate(req, res, next) {
         let updateInfo = {
-            versioncode: 5,//版本号
+            versioncode: 6,//版本号
             downloadurl: '/apk/WeYue.apk',//下载链接
         }
         res.json({
