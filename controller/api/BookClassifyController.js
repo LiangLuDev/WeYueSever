@@ -38,9 +38,9 @@ class Bookcontroller {
      * @param next
      */
     getBookList(req, res, next) {
-        let type = req.query.type == null ? 'hot' : req.query.type;
-        let major = req.query.major == null ? '玄幻' : req.query.major;
-        let page = req.query.page == null ? 1 : req.query.page;
+        let type = req.query.type === null ? 'hot' : req.query.type;
+        let major = req.query.major === null ? '玄幻' : req.query.major;
+        let page = req.query.page === null ? 1 : req.query.page;
 
 
         let sortType;
@@ -59,7 +59,7 @@ class Bookcontroller {
 
         let find = booksDetailInfo.find({}, {__v: 0});
         find.where('majorCate').equals(major)
-        find.skip(page == 1 ? 0 : page * 10)
+        find.skip(page === 1 ? 0 : page * 10)
         find.limit(10)
         find.sort(sortType)
         find.exec((err, books) => {
@@ -71,31 +71,13 @@ class Bookcontroller {
                 });
                 return;
             }
+            console.log(books.length);
 
             res.json({
                 code: constant.RESULT_CODE.SUCCESS.code,
                 msg: constant.RESULT_CODE.SUCCESS.msg,
                 data: books
             });
-            //获取用户信息
-            // userInfo.findOne({name: name}).exec((err, user) => {
-            //     if (books.length > 0) {
-            //         books.forEach((book, index) => {
-            //             if (user.likebooks.indexOf(book._id) >= 0) {//设置此用户收藏的话就设置为已收藏
-            //                 book.isCollect = true;
-            //             }
-            //         })
-            //     }
-            //
-            //     res.json({
-            //         code: constant.RESULT_CODE.SUCCESS.code,
-            //         msg: constant.RESULT_CODE.SUCCESS.msg,
-            //         data: books
-            //     });
-            //
-            // })
-
-
         })
 
     }
