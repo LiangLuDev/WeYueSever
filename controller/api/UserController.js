@@ -388,9 +388,7 @@ class UserController {
     addBookShelf(req, res, next) {
         let name = req.decoded.name;
         let bookid = req.body.bookid;
-        console.log(bookid);
         userInfo.findOne({name: name}).exec((err, user) => {
-            console.log(user);
             if (err) {
                 console.log(err);
                 res.json({
