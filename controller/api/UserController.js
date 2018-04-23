@@ -27,8 +27,9 @@ class UserController {
      * @param next
      */
     userRegister(req, res, next) {
-        let name = req.query.name;
-        let password = req.query.password;
+        console.log(req.body);
+        let name = req.body.name;
+        let password = req.body.password;
         userInfo
             .findOne({name: name}, _filter)
             .exec((err, data) => {
@@ -53,7 +54,7 @@ class UserController {
 
                 let user = {};
                 user.name = name;
-                user.nickname = '微悦_' + name;
+                user.nickname = 'WeYue-' + name;
                 user.password = pass;
                 user.token = token;
                 user.icon = '/images/avatar/default_avatar.jpg';
@@ -386,7 +387,7 @@ class UserController {
      */
     addBookShelf(req, res, next) {
         let name = req.decoded.name;
-        let bookid = req.query.bookid;
+        let bookid = req.body.bookid;
 
         userInfo.findOne({name: name}).exec((err, user) => {
             if (err) {
@@ -481,8 +482,8 @@ class UserController {
      * @param next
      */
     userFeedBack(req, res, next) {
-        let qq = req.query.qq;
-        let feedback = req.query.feedback;
+        let qq = req.body.qq;
+        let feedback = req.body.feedback;
 
         if (qq == null || feedback == null) {
             res.json({
